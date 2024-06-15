@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food List</title>
+    <link rel="stylesheet" href="../list/style1.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <h1>FOOD DONATION PLATFORM LEH</h1>
+            <ul>
+                <li><a href="../front.html">Donate Food</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="content">
+        <h2>LIST OF FOOD ITEMS</h2>
+        <table id="foodListTable">
+            <thead>
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Food Description</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="foodList">
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>About US</h3>
+                <p>Our mission is to facilitate the donation of food items to those in need, helping to reduce food waste and hunger.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Donate Food. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        function loadFoodItems() {
+            var foodItems = JSON.parse(localStorage.getItem('foodItems')) || [];
+            var foodList = document.getElementById('foodList');
+
+            foodItems.forEach(function(item, index) {
+                var row = foodList.insertRow();
+                row.insertCell(0).textContent = item.hotelName;
+                row.insertCell(1).textContent = item.foodDescription;
+                row.insertCell(2).textContent = item.phone;
+                row.insertCell(3).textContent = item.address;
+                row.insertCell(4).textContent = item.email;
+                var actionCell = row.insertCell(5);
+                var button = document.createElement('button');
+                button.textContent = 'Select';
+                button.onclick = function() {
+                    notifyHotelOwner(index);
+                };
+                actionCell.appendChild(button);
+            });
+        }
+
+        function notifyHotelOwner(index) {
+            var foodItems = JSON.parse(localStorage.getItem('foodItems')) || [];
+            var selectedFoodItem = foodItems[index];
+
+            var ngoMessage = "Dear Hotel Owner,\n\n";
+            ngoMessage += "We are interested in donating food items from your hotel: " + selectedFoodItem.hotelName + ".\n";
+            ngoMessage += "Please contact us at your earliest convenience to coordinate the donation pickup.\n\n";
+            ngoMessage += "Best regards,\nThe ZAHIR Team";
+
+            alert("Message generated to hotel owner:\n\n" + ngoMessage);
+
+            // Remove selected item from local storage and reload the list
+            foodItems.splice(index, 1); // Remove the item from array
+            localStorage.setItem('foodItems', JSON.stringify(foodItems)); // Update local storage
+
+            // Reload the table to reflect updated list
+            var foodListTable = document.getElementById('foodListTable');
+            var rowCount = foodListTable.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                foodListTable.deleteRow(i);
+            }
+            loadFoodItems(); // Reload the table with updated data
+        }
+
+        document.addEventListener('DOMContentLoaded', loadFoodItems);
+    </script>
+   
+</body>
+</html>

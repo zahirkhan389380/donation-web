@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <h1>LADAKH FOOD DONATION WEBSITE</h1>
+            <ul>
+                <li><a href="../images/list/LIST.html">Food List</a></li>
+                <li><a href="../images/compline/compline.html">Complain</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="content">
+        <form id="donationForm" onsubmit="return validateForm()" class="form-container">
+            <h2>DONATE FOOD</h2>
+            <a href="./LIST.html">LIST OF FOOD ITEMS</a><br><br>
+            <label for="hotelName">Hotel Name</label>
+            <input type="text" name="hotelName" id="hotelName" placeholder="Enter the hotel name">
+            <label for="foodDescription">Food Description</label>
+            <input type="text" name="foodDescription" id="foodDescription" placeholder="Enter the food description">
+            <label for="phone">Phone</label>
+            <input type="tel" name="phone" id="phone" placeholder="Enter the phone number">
+            <label for="address">Address</label>
+            <textarea name="address" id="address" placeholder="Enter the address"></textarea>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Enter the email">
+            <button type="submit">SUBMIT</button>
+            <p id="error-message" style="color:red;"></p>
+        </form>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>About</h3>
+                <p>Our mission is to facilitate the donation of food items to those in need, helping to reduce food waste and hunger.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Donate Food. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        function validateForm() {
+            var hotelName = document.getElementById("hotelName").value;
+            var foodDescription = document.getElementById("foodDescription").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var email = document.getElementById("email").value;
+            var errorMessage = document.getElementById("error-message");
+
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var numbersOnlyRegex = /^\d+$/;
+
+            errorMessage.textContent = "";
+
+            if (hotelName === "" || foodDescription === "" || phone === "" || address === "" || email === "") {
+                errorMessage.textContent = "All fields are required.";
+                return false;
+            }
+
+            if (!emailRegex.test(email)) {
+                errorMessage.textContent = "Please enter a valid email ID.";
+                return false;
+            }
+
+            if (numbersOnlyRegex.test(hotelName)) {
+                errorMessage.textContent = "Hotel name should not consist of numbers only.";
+                return false;
+            }
+
+            saveFoodItem(hotelName, foodDescription, phone, address, email);
+
+            alert("Form submitted successfully!");
+            return true;
+        }
+
+        function saveFoodItem(hotelName, foodDescription, phone, address, email) {
+            var foodItems = JSON.parse(localStorage.getItem('foodItems')) || [];
+            foodItems.push({ hotelName, foodDescription, phone, address, email });
+            localStorage.setItem('foodItems', JSON.stringify(foodItems));
+        }
+    </script>
+</body>
+</html>
